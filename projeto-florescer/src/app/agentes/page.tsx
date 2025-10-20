@@ -4,6 +4,7 @@ import { Sidebar } from '@/components/sidebar'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import {
   Select,
@@ -145,6 +146,7 @@ const periodLabel = new Intl.DateTimeFormat('pt-BR', {
 }).format(new Date())
 
 export default function AgentesPage() {
+  const [query, setQuery] = useState('')
   const [municipio, setMunicipio] = useState<string>('Todos')
   const [selectedId, setSelectedId] = useState<string>(AGENTES[0].id)
 
@@ -154,15 +156,13 @@ export default function AgentesPage() {
   )
 
   const ranking = useMemo(() => {
-    const list = [...AGENTES]
+    const q = query.trim().toLowerCase()
+    return [...AGENTES]
       .filter((a) => (municipio === 'Todos' ? true : a.municipio === municipio))
+      .filter((a) => (q ? a.nome.toLowerCase().includes(q) : true))
       .sort((a, b) => b.score - a.score)
       .slice(0, 10)
-    // garante seleção válida
-    if (!list.find((a) => a.id === selectedId) && list[0])
-      setSelectedId(list[0].id)
-    return list
-  }, [municipio]) // eslint-disable-line
+  }, [municipio, query])
 
   const selecionado = useMemo(
     () => AGENTES.find((a) => a.id === selectedId)!,
@@ -190,7 +190,8 @@ export default function AgentesPage() {
 
         {/* Filtros */}
         <Card className='p-5 mb-4'>
-          <div className='flex flex-col md:flex-row gap-4 md:items-center justify-between'>
+          <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+            {/* Município (esquerda) */}
             <div className='flex items-center gap-3'>
               <span className='text-sm text-muted-foreground'>Município</span>
               <Select value={municipio} onValueChange={setMunicipio}>
@@ -207,7 +208,33 @@ export default function AgentesPage() {
               </Select>
             </div>
 
-            <div className='flex items-center gap-2'>
+            {/* Busca (central) */}
+            <div className='md:flex-1 flex justify-center'>
+              <div className='relative w-full max-w-md'>
+                <span className='material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
+                  search
+                </span>
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder='Pesquisar ACS...'
+                  className='pl-10'
+                />
+                {query && (
+                  <button
+                    type='button'
+                    onClick={() => setQuery('')}
+                    className='absolute right-2 top-1/2 -translate-y-1/2 rounded-md px-2 py-1 text-xs hover:bg-muted/60'
+                    aria-label='Limpar busca'
+                  >
+                    limpar
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Período (direita) */}
+            <div className='flex items-center gap-2 justify-end'>
               <span className='text-sm text-muted-foreground'>Período</span>
               <Badge className='bg-primary text-primary-foreground'>
                 Mês Atual
