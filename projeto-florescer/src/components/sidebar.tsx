@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 
 const items = [
   { href: '/dashboard', label: 'Dashboard', icon: 'space_dashboard' },
-  { href: '/agentes', label: 'Agentes', icon: 'group' },
+  { href: '/acs', label: 'ACS', icon: 'group' },
   { href: '/ubs', label: 'UBS', icon: 'local_hospital' },
   { href: '/atividades', label: 'Atividades', icon: 'event_list' },
   { href: '/regioes', label: 'Regiões', icon: 'map' },

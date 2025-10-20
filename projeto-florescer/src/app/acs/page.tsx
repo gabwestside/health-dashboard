@@ -176,7 +176,7 @@ export default function AgentesPage() {
         {/* Header */}
         <div className='flex items-center justify-between py-6'>
           <h1 className='text-2xl md:text-3xl font-semibold'>
-            Agentes Comunitários
+            ACS - Agentes Comunitários de Saúde
           </h1>
           <div className='flex items-center gap-3'>
             <Badge variant='secondary' className='uppercase tracking-wide'>
